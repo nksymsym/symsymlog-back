@@ -1,0 +1,26 @@
+version: '3.2'
+services:
+  db:
+    image: postgres:latest
+    container_name: symsymlog_db
+    restart: always
+    # ports:
+    #   - 5432:5432
+    environment:
+      POSTGRES_USER: 'dev'
+      POSTGRES_PASSWORD: 'dev'
+    volumes:
+      - ./init_db:/docker-entrypoint-initdb.d
+  java:
+    image: openjdk:11
+    container_name: symsymlog_bk
+    restart: always
+    ports:
+      - 8080:8080
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - ../:/home/symsymlog-back/
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
